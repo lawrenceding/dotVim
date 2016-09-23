@@ -226,7 +226,8 @@ nnoremap bk :bnext<cr>
 "}}}
 " ctags {{{
 " ---------------
-set tags=tags;,~/_vimtags  "; here let vim go to up folds until find one tags file
+"set tags=tags;,~/_vimtags  "; here let vim go to up folds until find one tags file
+set tags=tags;~  "; here let vim go to up folds until find one tags file
 if has('win32') || has('win64')
     nnoremap ec :!start ctags -R --fields=+l --c-kinds=+pl --c++-kinds=+pl .<cr>
 else
@@ -297,14 +298,15 @@ let g:airline_theme='bubblegum'
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
-let g:airline_left_sep = '⮀'
-let g:airline_left_alt_sep = '⮁'
-let g:airline_right_sep = '⮂'
-let g:airline_right_alt_sep = '⮃'
-let g:airline_symbols.branch = '⭠'
-let g:airline_symbols.readonly = '⭤'
-let g:airline_symbols.linenr = '⭡'
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
 
+let g:airline#extensions#tabline#enabled = 0
 let g:airline#extensions#tabline#fnamemod = ':p:t'
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 nmap <leader>1 <Plug>AirlineSelectTab1
@@ -358,7 +360,9 @@ Plug 'Valloric/YouCompleteMe'
 let g:ycm_global_ycm_extra_conf = "~/.vim/.ycm_extra_conf.py"
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_show_diagnostics_ui = 0
+let g:ycm_server_python_interpreter = 'python'
 "autocmd FileType c nnoremap <buffer> <silent> <C-]> :YcmCompleter GoTo<cr>
+"autocmd FileType c nnoremap <buffer> <silent> <C-]> :YcmCompleter GoToDefinition<cr>
 " }}}
 " Color_coded {{{
 "Plug 'jeaye/color_coded'
@@ -408,8 +412,8 @@ let g:multi_cursor_skip_key='<C-x>'
 let g:multi_cursor_quit_key='<Esc>'
 " }}}
 " fzf {{{
-Plug 'junegunn/fzf' , { 'dir': '~/.fzf', 'do': './install --all' }
-nmap <silent> <leader>f  :FZF `pwd`<cr>
+"Plug 'junegunn/fzf' , { 'dir': '~/.fzf', 'do': './install --all' }
+"nmap <silent> <leader>f  :FZF `pwd`<cr>
 "nmap <silent> <leader>f  :FZF ~<cr>
 " }}}
 " ag {{{
@@ -417,5 +421,107 @@ Plug 'rking/ag.vim'
 let g:ag_working_path_mode="r"
 nmap ft :Ag <cword><CR>
 " }}}
+" ctrlp.vim {{{
+" ---------------
+Plug 'kien/ctrlp.vim'
+let g:ctrlp_map = '<leader>,'
+let g:ctrlp_cmd = 'CtrlP'
+" Ensure max height isn't too large. (for performance)
+let g:ctrlp_max_height = 10
+
+nmap <leader>. :CtrlPClearCache<cr>:CtrlP<cr>
+nmap <leader>l :CtrlPLine<cr>
+nmap <leader>b :CtrlPBuff<cr>
+nmap <leader>m :CtrlPBufTag<cr>
+nmap <leader>M :CtrlPBufTagAll<cr>
+let g:ctrlp_clear_cache_on_exit = 1
+" ctrlp leaves stale caches behind if there is another vim process runnin
+" which didn't use ctrlp. so we clear all caches on each new vim invocation
+"cal ctrlp#clra()
+" jump to buffer in the same tab if already open
+let g:ctrlp_switch_buffer = 1
+" if in git repo - use git file listing command, should be faster
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files --exclude-standard -cod']
+
+" open multiple files with <c-z> to mark and <c-o> to open. v - opening in
+" vertical splits; j - jump to first open buffer; r - open first in current
+buffer
+let g:ctrlp_open_multiple_files = 'vjr'
+
+let g:ctrlp_extensions = ['tag', 'buffertag', 'quickfix', 'mixed', 'line']
+"}}}
+" TagHighlight {{{
+" ---------------
+Plug 'vim-scripts/TagHighlight'
+nnoremap ut :UpdateTypesFile <cr>
+"nnoremap th :UpdateTypesFile <cr>
+ "colors for Taghighlight {{{
+"hi Class guifg=#800080 guibg=NONE gui=NONE ctermfg=90 ctermbg=NONE cterm=NONE
+"hi DefinedName guifg=#EE82EE guibg=NONE gui=NONE ctermfg=175 ctermbg=NONE cterm=NONE
+"hi Function guifg=#007777 guibg=NONE gui=NONE ctermfg=30 ctermbg=NONE cterm=NONE
+"hi EnumerationValue guifg=#C000C0 guibg=NONE gui=NONE ctermfg=164 ctermbg=NONE cterm=NONE
+"hi EnumerationName guifg=#FF22FF guibg=NONE gui=NONE ctermfg=201 ctermbg=NONE cterm=NONE
+"hi Member guifg=#A9A9A9 guibg=NONE gui=NONE ctermfg=145 ctermbg=NONE cterm=NONE
+"hi Structure guifg=#FF8080 guibg=NONE gui=NONE ctermfg=210 ctermbg=NONE cterm=NONE
+"hi Type guifg=#FF8000 guibg=NONE gui=NONE ctermfg=208 ctermbg=NONE cterm=NONE
+"hi Union guifg=#808080 guibg=NONE gui=NONE ctermfg=102 ctermbg=NONE cterm=NONE
+"hi GlobalVariable guifg=#df5f87 guibg=NONE gui=NONE ctermfg=168 ctermbg=NONE cterm=NONE
+"hi LocalVariable guifg=#AAA14C guibg=NONE gui=NONE ctermfg=143 ctermbg=NONE cterm=NONE
+"hi GlobalConstant guifg=#df5f87 guibg=NONE gui=NONE ctermfg=168 ctermbg=NONE cterm=NONE
+"hi cPreCondit guifg=#ff8700 guibg=NONE gui=NONE ctermfg=208 ctermbg=NONE cterm=NONE
+"hi cTODO guifg=#ff0000 guibg=#dfff00 gui=NONE ctermfg=196 ctermbg=190 cterm=NONE
+"}}}
+"}}}
+" Neocomplete {{{
+" ---------------
+"Plug 'Shougo/neocomplete'
+"Plug 'Shougo/neosnippet'
+"Plug 'Shougo/neosnippet-snippets'
+"let g:neocomplete#enable_at_startup = 1
+"let g:neocomplete#enable_smart_case = 1
+"let g:neocomplete#sources#syntax#min_keyword_length = 3
+"let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+"" Define dictionary.
+"let g:neocomplete#sources#dictionary#dictionaries = {
+    "\ 'default' : '',
+    "\ 'vimshell' : $HOME.'/.vimshell_hist',
+    "\ 'scheme' : $HOME.'/.gosh_completions'
+        "\ }
+
+"" Define keyword.
+"if !exists('g:neocomplete#keyword_patterns')
+    "let g:neocomplete#keyword_patterns = {}
+"endif
+"let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+"" Plugin key-mappings.
+"inoremap <expr><C-g>     neocomplete#undo_completion()
+"inoremap <expr><C-l>     neocomplete#complete_common_string()
+
+"" Recommended key-mappings.
+"" <CR>: close popup and save indent.
+"inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+"function! s:my_cr_function()
+  "return neocomplete#smart_close_popup() . "\<CR>"
+  "" For no inserting <CR> key.
+  ""return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+"endfunction
+"" <TAB>: completion.
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"" <C-h>, <BS>: close popup and delete backword char.
+"inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+"inoremap <expr><C-y>  neocomplete#close_popup()
+"inoremap <expr><C-e>  neocomplete#cancel_popup()
+
+"" Enable omni completion.
+"autocmd FileType c,cpp setlocal omnifunc=ccomplete#Complete
+"autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+"autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+"autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+"autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+"}}}
 call plug#end()
 "}}}
